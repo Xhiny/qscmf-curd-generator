@@ -3,7 +3,7 @@ namespace CurdGen\Type;
 
 use CurdGen\Helper;
 
-class Date extends AbstractType implements ITable , IForm {
+class Date extends AbstractType implements ITable , IForm, IAuto {
 
     public function formParse()
     {
@@ -21,5 +21,13 @@ class Date extends AbstractType implements ITable , IForm {
         ];
 
         return $table_item;
+    }
+
+    public function autoParse()
+    {
+        return <<<p
+        ['{$this->column_set->COLUMN_NAME}', 'strtotime', parent::MODEL_BOTH, 'function'],
+p
+            . PHP_EOL;
     }
 }

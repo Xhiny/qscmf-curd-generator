@@ -5,7 +5,11 @@ use Qscmf\Core\QsListModel;
 
 class {DummyModel}Model extends QsListModel{
 
+    protected $_validate = [
+{DummyValidate}
+    ];
+
     protected $_auto = [
-        ['create_date', 'microtime', parent::MODEL_INSERT, 'function', true]
+{DummyAuto}
     ];
 }

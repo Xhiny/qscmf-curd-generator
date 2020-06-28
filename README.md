@@ -114,6 +114,34 @@ composer require quansitech/qscmf-curd-generator
 > $table->tinyInteger('status')->comment('@title=状态;@type=status;@list=status; 1 启用 0 禁用');
 >```
 
++ url
+> 网址
+> 样例代码
+>```php
+> $table->string('url', 500)->comment('@title=网站地址;@type=url;');
+>```
+
++ phone
+> 手机号码
+> 样例代码
+>```php
+> $table->string('tel', 20)->comment('@title=手机号;@type=phone;');
+>```
+
++ email
+> 邮箱地址
+> 样例代码
+>```php
+> $table->string('email', 50)->comment('@title=邮箱;@type=email;');
+>```
+
+3. length
+> 设置字段长度限制, 第一个数字为最小长度， 第二个数字最大长度， 两个数字用逗号分隔
+> 样例代码
+>```php
+> $table->string('title', 20)->comment('@title=合作伙伴;@length=1,20;');
+>```
+
 ##### 生成命令
 ```php
 php artisan qscmf:curd-gen 表名

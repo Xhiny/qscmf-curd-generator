@@ -29,6 +29,8 @@ class CurdGenCommand extends Command{
     const DUMMY_TABLE_COLUMNS = '{DummyTableColumns}';
     const DUMMY_EDIT_COLUMNS = '{DummyEditColumns}';
     const DUMMY_FORM_COLUMNS = '{DummyFormColumns}';
+    const DUMMY_MODEL_VALIDATE = '{DummyValidate}';
+    const DUMMY_MODEL_AUTO = '{DummyAuto}';
 
     public function __construct(Filesystem $files)
     {
@@ -89,7 +91,24 @@ class CurdGenCommand extends Command{
     protected function populateModelStub(&$stub, $columns_set, $table_set){
         $dummy_model = $this->getDummyModel($table_set[0]->TABLE_NAME);
 
+        $dummy_validate = '';
+        $dummy_auto = '';
+
+        foreach($columns_set as $column){
+            $dummy_validate_str = Parser::modelValidate($column);
+            if($dummy_validate_str !== false){
+                $dummy_validate .= $dummy_validate_str;
+            }
+
+            $dummy_auto_str = Parser::modelAuto($column);
+            if($dummy_auto_str !== false){
+                $dummy_auto .= $dummy_auto_str;
+            }
+        }
+
         $stub = str_replace(self::DUMMY_MODEL, trim($dummy_model), $stub);
+        $stub = str_replace(self::DUMMY_MODEL_VALIDATE, rtrim($dummy_validate), $stub);
+        $stub = str_replace(self::DUMMY_MODEL_AUTO, rtrim($dummy_auto), $stub);
 
         return LARA_DIR . '/../app/Common/Model/' . $dummy_model . 'Model.class.php';
     }
