@@ -1,0 +1,29 @@
+{
+    "name": "quansitech/qscmf-curd-generator",
+    "description": "qscmf curd admin",
+    "type": "library",
+    "keywords": ["qscmf", "component"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "tiderjian",
+            "email": "tider_yatsen@hotmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.2",
+        "tiderjian/think-core": ">=11.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "CurdGen\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "CurdGen\\CurdGenServiceProvider"
+            ]
+        }
+    }
+}

@@ -1,0 +1,163 @@
+<?php
+namespace Admin\Controller;
+
+use Gy_Library\DBCont;
+use Qscmf\Core\QsListController;
+
+class {DummyModel}Controller extends QsListController{
+
+    public function index(){
+        $model = D('{DummyModel}');
+        $count = $model->getListForCount();
+        $per_page = C('ADMIN_PER_PAGE_NUM', null, false);
+        if($per_page === false){
+            $page = new \Gy_Library\GyPage($count);
+        }
+        else{
+            $page = new \Gy_Library\GyPage($count, $per_page);
+        }
+
+        $data_list = $model->getListForPage([], $page->nowPage, $page->listRows, 'create_date desc');
+
+
+        $builder = new \Qscmf\Builder\ListBuilder();
+
+
+        $builder = $builder->setMetaTitle('{DummyModelTitle}列表');
+        $builder->addTopButton('addnew')
+            ->addTopButton('forbid')
+            ->addTopButton('resume')
+            ->addTopButton('delete')
+            ->setNIDByNode(MODULE_NAME, CONTROLLER_NAME, 'index')
+            {DummyTableColumns}
+            ->addTableColumn('right_button', '操作', 'btn')
+            ->setTableDataList($data_list)
+            ->setTableDataPage($page->show())
+            ->addRightButton('edit')
+            ->addRightButton('forbid')
+            ->addRightButton('delete')
+            ->display();
+    }
+
+    public function edit($id){
+        if (IS_POST) {
+            parent::autoCheckToken();
+            $m_id = I('post.id');
+            $data = I('post.');
+            $model = D('{DummyModel}');
+            if(!$m_id){
+                E('缺少{DummyModelTitle}ID');
+            }
+
+            $ent = $model->getOne($m_id);
+            if(!$ent){
+                E('不存在{DummyModelTitle}');
+            }
+
+            {DummyEditColumns}
+            if($model->createSave($ent) === false){
+                $this->error($model->getError());
+            }
+            else{
+                sysLogs('修改{DummyModelTitle}, id:' . $m_id);
+                $this->success('修改成功', 'javascript:location.href=document.referrer;');
+            }
+        } else {
+            $info = D('{DummyModel}')->getOne($id);
+
+
+            $builder = new \Qscmf\Builder\FormBuilder();
+            $builder->setMetaTitle('编辑{DummyModelTitle}')
+                ->setPostUrl(U('edit'))
+                ->setNIDByNode(MODULE_NAME, CONTROLLER_NAME, 'index')
+                ->addFormItem('id', 'hidden', 'ID')
+                {DummyFormColumns}
+                ->setFormData($info)
+                ->display();
+
+        }
+    }
+
+    public function forbid(){
+        $ids = I('ids');
+        if(!$ids){
+            $this->error('请选择要禁用的数据');
+        }
+        $r = parent::_forbid($ids);
+        if($r !== false){
+            sysLogs('{DummyModelTitle}, id: ' . $ids . ' 禁用');
+            $this->success('禁用成功', 'javascript:location.reload();');
+        }
+        else{
+            $this->error($this->_getError());
+        }
+    }
+
+    public function resume(){
+        $ids = I('ids');
+        if(!$ids){
+            $this->error('请选择要启用的数据');
+        }
+        $r = parent::_resume($ids);
+        if($r !== false){
+            sysLogs('{DummyModelTitle}, id: ' . $ids . ' 启用');
+            $this->success('启用成功', 'javascript:location.reload();');
+        }
+        else{
+            $this->error($this->_getError());
+        }
+
+    }
+
+    public function delete(){
+        $ids = I('ids');
+        if(!$ids){
+            $this->error('请选择要删除的数据');
+        }
+        $r = parent::_del($ids);
+        if($r === false){
+            $this->error($this->_getError());
+        }
+        else{
+            sysLogs('{DummyModelTitle}, id: ' . $ids . ' 删除');
+            $this->success('删除成功', 'javascript:location.reload();');
+        }
+    }
+
+    public function add(){
+        if (IS_POST) {
+            parent::autoCheckToken();
+            $data = I('post.');
+
+            $model = D('{DummyModel}');
+            $r = $model->createAdd($data);
+            if($r === false){
+                $this->error($model->getError());
+            }
+            else{
+                sysLogs('新增{DummyModelTitle}, id:' . $r);
+
+                $this->success(l('add') . l('success'), 'javascript:location.href=document.referrer;');
+            }
+        }
+        else {
+            $builder = new \Qscmf\Builder\FormBuilder();
+
+            $data_list = array(
+                "status"=>1
+            );
+
+            if($data_list){
+                $builder->setFormData($data_list);
+            }
+
+            $builder->setMetaTitle('新增{DummyModelTitle}')
+                ->setNIDByNode(MODULE_NAME, CONTROLLER_NAME, 'index')
+                ->setPostUrl(U('add'))
+                {DummyFormColumns}
+                ->display();
+        }
+    }
+
+
+}
