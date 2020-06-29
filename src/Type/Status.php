@@ -43,8 +43,8 @@ class Status extends AbstractType implements IForm, ITable {
 
 
         $dbcont = [
-            'Qscmf\Lib\DBCont',
-            'Gy_Library\DBCont'
+            '\Qscmf\Lib\DBCont',
+            '\Gy_Library\DBCont'
         ];
 
         $key = '_' . Str::snake($list);
