@@ -31,12 +31,16 @@ class CurdGenCommand extends Command{
     const DUMMY_FORM_COLUMNS = '{DummyFormColumns}';
     const DUMMY_MODEL_VALIDATE = '{DummyValidate}';
     const DUMMY_MODEL_AUTO = '{DummyAuto}';
+    const DUMMY_SAVE_TOP_BUTTON = '{DummySaveTopButton}';
+    const DUMMY_SAVE = '{DummySave}';
+    const DUMMY_SAVE_COLUMNS = '{DummySaveColumns}';
 
     public function __construct(Filesystem $files)
     {
         parent::__construct();
 
         $this->files = $files;
+
     }
 
 
@@ -126,6 +130,7 @@ class CurdGenCommand extends Command{
         $dummy_table_columns = '';
         $dummy_form_columns = '';
         $dummy_edit_columns = '';
+        $dummy_save_columns = '';
         foreach($columns_set as $column){
             $dump_table_str = Parser::tableColumn($column);
             if($dump_table_str !== false){
@@ -141,14 +146,43 @@ class CurdGenCommand extends Command{
             if($dump_edit_str !== false){
                 $dummy_edit_columns .= $dump_edit_str . PHP_EOL;
             }
+
+            $dummy_save_str = Parser::saveColumn($column);
+            if($dummy_save_str !== false){
+                $dummy_save_columns .= $dummy_save_str . PHP_EOL;
+            }
         }
 
-        $stub = str_replace(self::DUMMY_MODEL, trim($dummy_model), $stub);
-        $stub = str_replace(self::DUMMY_MODEL_TITLE, trim($dummy_model_title), $stub);
+        if(strlen($dummy_save_columns) > 0){
+            self::injectSaveTemplate($stub);
+            self::injectSaveTopButton($stub);
+
+            $stub = str_replace(self::DUMMY_SAVE_COLUMNS, trim($dummy_save_columns), $stub);
+        }
+        else{
+            $stub = str_replace(self::DUMMY_SAVE, '', $stub);
+            $stub = str_replace(self::DUMMY_SAVE_TOP_BUTTON, '', $stub);
+        }
+
         $stub = str_replace(self::DUMMY_TABLE_COLUMNS, trim($dummy_table_columns), $stub);
         $stub = str_replace(self::DUMMY_EDIT_COLUMNS, trim($dummy_edit_columns), $stub);
         $stub = str_replace(self::DUMMY_FORM_COLUMNS, trim($dummy_form_columns), $stub);
+        $stub = str_replace(self::DUMMY_MODEL, trim($dummy_model), $stub);
+        $stub = str_replace(self::DUMMY_MODEL_TITLE, trim($dummy_model_title), $stub);
 
         return LARA_DIR . '/../app/Admin/Controller/' . $dummy_model . 'Controller.class.php';
+    }
+
+    protected function injectSaveTemplate(&$stub){
+        $save_stub = $this->getStub('save');
+        $stub = str_replace(self::DUMMY_SAVE, $save_stub, $stub);
+    }
+
+    protected function injectSaveTopButton(&$stub){
+        $save_top_button = <<<template
+->addTopButton('save', array('title' => '保存'))
+template;
+
+        $stub = str_replace(self::DUMMY_SAVE_TOP_BUTTON, $save_top_button, $stub);
     }
 }

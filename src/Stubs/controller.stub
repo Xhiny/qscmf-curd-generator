@@ -28,6 +28,7 @@ class {DummyModel}Controller extends QsListController{
             ->addTopButton('forbid')
             ->addTopButton('resume')
             ->addTopButton('delete')
+            {DummySaveTopButton}
             ->setNIDByNode(MODULE_NAME, CONTROLLER_NAME, 'index')
             {DummyTableColumns}
             ->addTableColumn('right_button', '操作', 'btn')
@@ -38,6 +39,8 @@ class {DummyModel}Controller extends QsListController{
             ->addRightButton('delete')
             ->display();
     }
+
+{DummySave}
 
     public function edit($id){
         if (IS_POST) {

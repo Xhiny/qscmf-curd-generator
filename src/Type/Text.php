@@ -2,17 +2,8 @@
 namespace CurdGen\Type;
 
 use CurdGen\Helper;
-use Illuminate\Support\Str;
 
-class Phone extends AbstractType implements IForm, ITable, IValidate, ISave  {
-
-    public function validateParse()
-    {
-        return <<<p
-        ['{$this->column_set->COLUMN_NAME}', '/^1\d{10}$/', '手机号码格式不正确', parent::EXISTS_VALIDATE, 'regex'],
-p
-            . PHP_EOL;
-    }
+class Text extends AbstractType implements IForm, ITable, ISave {
 
     public function formParse()
     {
@@ -29,6 +20,7 @@ p
                 \$save_data['{$this->column_set->COLUMN_NAME}'] = \$data['{$this->column_set->COLUMN_NAME}'][\$k];
 sample;
     }
+
 
     public function tableParse()
     {

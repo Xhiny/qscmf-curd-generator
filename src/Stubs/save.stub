@@ -1,0 +1,10 @@
+    public function save(){
+        if(IS_POST){
+            $data = I('post.');
+            foreach($data['id'] as $k=>$v){
+                {DummySaveColumns}
+                D('{DummyModel}')->where('id=' . $v)->save($save_data);
+            }
+            $this->success('保存成功', U('index'));
+        }
+    }

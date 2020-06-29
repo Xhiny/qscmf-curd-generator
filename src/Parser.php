@@ -4,6 +4,7 @@ namespace CurdGen;
 use CurdGen\Type\Factory;
 use CurdGen\Type\IAuto;
 use CurdGen\Type\IForm;
+use CurdGen\Type\ISave;
 use CurdGen\Type\ITable;
 use CurdGen\Type\IValidate;
 use PHPUnit\TextUI\Help;
@@ -26,6 +27,10 @@ class Parser{
         $pair = [];
         for($i = 0; $i < $num; $i++){
             $pair[$match[1][$i]] = $match[2][$i];
+        }
+
+        if(!isset($pair['type'])){
+            $pair['type'] = 'text';
         }
 
         return $pair;
@@ -52,12 +57,10 @@ class Parser{
 
         $table_item['name'] = Helper::wrap($column_set->COLUMN_NAME);
 
-        if(isset($pair['type'])){
-            $type = Factory::getInstance($pair['type'], $pair, $column_set);
-            if($type instanceof ITable){
-                $res = $type->tableParse();
-                $table_item = array_merge($table_item, $res);
-            }
+        $type = Factory::getInstance($pair['type'], $pair, $column_set);
+        if($type instanceof ITable){
+            $res = $type->tableParse();
+            $table_item = array_merge($table_item, $res);
         }
 
         $param_str = join(', ', $table_item);
@@ -82,7 +85,6 @@ sample;
         }
 
         $form_item['name'] = Helper::wrap($column_set->COLUMN_NAME);
-        $form_item['type'] = Helper::wrap('text');
 
         $pair = self::exec($column_set->COLUMN_COMMENT);
         if(isset($pair['title'])){
@@ -92,12 +94,10 @@ sample;
             $form_item['title'] = Helper::wrap($column_set->COLUMN_NAME);
         }
 
-        if(isset($pair['type'])){
-            $type = Factory::getInstance($pair['type'], $pair, $column_set);
-            if($type instanceof IForm){
-                $res = $type->formParse();
-                $form_item = array_merge($form_item, $res);
-            }
+        $type = Factory::getInstance($pair['type'], $pair, $column_set);
+        if($type instanceof IForm){
+            $res = $type->formParse();
+            $form_item = array_merge($form_item, $res);
         }
 
         $param_str = join(', ', $form_item);
@@ -138,6 +138,7 @@ sample;
         return false;
     }
 
+
     static public function modelAuto($column_set){
         $pair = self::exec($column_set->COLUMN_COMMENT);
 
@@ -174,5 +175,22 @@ p
 p
             . PHP_EOL;
 
+    }
+
+    static public function saveColumn($column_set){
+        $pair = self::exec($column_set->COLUMN_COMMENT);
+
+        $res = '';
+        if(isset($pair['type'])){
+            $type = Factory::getInstance($pair['type'], $pair, $column_set);
+            if($type instanceof ISave && isset($pair['save']) && $pair['save'] == 'true'){
+                $save_res = $type->saveParse();
+                $res .= $save_res;
+            }
+        }
+        if($res){
+            return $res;
+        }
+        return false;
     }
 }

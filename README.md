@@ -123,6 +123,7 @@ composer require quansitech/qscmf-curd-generator
 
 + phone
 > 手机号码
+>
 > 样例代码
 >```php
 > $table->string('tel', 20)->comment('@title=手机号;@type=phone;');
@@ -130,6 +131,7 @@ composer require quansitech/qscmf-curd-generator
 
 + email
 > 邮箱地址
+>
 > 样例代码
 >```php
 > $table->string('email', 50)->comment('@title=邮箱;@type=email;');
@@ -137,10 +139,20 @@ composer require quansitech/qscmf-curd-generator
 
 3. length
 > 设置字段长度限制, 第一个数字为最小长度， 第二个数字最大长度， 两个数字用逗号分隔
+>
 > 样例代码
 >```php
 > $table->string('title', 20)->comment('@title=合作伙伴;@length=1,20;');
 >```
+
+4. save
+> 设置字段是否可以在list页面进行快速修改
+>
+> 样例代码
+>```php
+>$table->mediumInteger('sort')->comment('@title=排序;@save=true;');
+>```
+>目前支持save的类型有text、url、phone、email
 
 ##### 生成命令
 ```php
