@@ -112,6 +112,10 @@ sample;
             return false;
         }
 
+        if($column_set->COLUMN_NAME == 'create_date'){
+            return false;
+        }
+
         return <<<sample
             \$ent['{$column_set->COLUMN_NAME}'] = \$data['{$column_set->COLUMN_NAME}'];
 sample;
