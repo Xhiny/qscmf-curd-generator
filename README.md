@@ -33,19 +33,36 @@ composer require quansitech/qscmf-curd-generator
 
 2. type
 
-+ model 
++ select 
 > 表示该字段为外键，与另外一张表关联
 > 
-> 必填配置值
+> 必填配置值 (table 、 list的模式二选一)
 >
-> table 关联的表名
-> 
-> show 关联表的描述字段
+>  table模式（通过另外一张表获取下来选项）
 >
-> 样例代码
->```php
-> $table->mediumInteger('cate_id')->comment('@title=伙伴分类;@type=model;@table=qs_partner_cate;@show=title;');
->```
+>> table 关联的表名
+>> 
+>> show 关联表的描述字段
+>>
+>> 样例代码
+>>```php
+>> $table->mediumInteger('cate_id')->comment('@title=伙伴分类;@type=select;@table=qs_partner_cate;@show=title;');
+>>```
+>
+> list模式(通过DBCont获取下拉列表)
+>
+>> list 
+>> 
+>> DBCont中的变量名
+>>
+>> 如 Qscmf\Lib\DBCont 中的禁用启用项 $_status, 那么它的list就是 status
+>>
+>> 又如 Qscmf\Lib\DBCont 中的是否项 $_bool_status $_bool_status， 那么它的list就是 boolStatus
+>>
+>> 样例代码
+>>```php
+>> $table->tinyInteger('delete_status')->comment('@title=删除状态;@type=select;@list=boolStatus; 1 启用 0 禁用');
+>>```
 
 + date 
 > 日期类型 
