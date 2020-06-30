@@ -62,7 +62,7 @@ class Select extends AbstractType implements ITable , IForm {
 
         $list = ucfirst($list);
 
-        return Helper::wrap("{$const_cls}::get{$list}Type(__data_id__)");
+        return Helper::wrap("{$const_cls}::get{$list}(__data_id__)");
     }
 
     public function tableParse()
