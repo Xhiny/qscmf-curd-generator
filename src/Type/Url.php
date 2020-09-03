@@ -9,7 +9,7 @@ class Url extends AbstractType implements IForm, ITable, IValidate, ISave  {
     public function validateParse()
     {
         return <<<p
-        ['{$this->column_set->COLUMN_NAME}', 'isUrl', 'url格式不正确', parent::EXISTS_VALIDATE, 'function', parent::MODEL_BOTH],
+        ['{$this->column_set->COLUMN_NAME}', 'isUrl', 'url格式不正确', parent::VALUE_VALIDATE, 'function', parent::MODEL_BOTH],
 p
             . PHP_EOL;
     }
