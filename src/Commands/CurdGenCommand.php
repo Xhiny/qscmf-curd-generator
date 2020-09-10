@@ -34,6 +34,7 @@ class CurdGenCommand extends Command{
     const DUMMY_SAVE_TOP_BUTTON = '{DummySaveTopButton}';
     const DUMMY_SAVE = '{DummySave}';
     const DUMMY_SAVE_COLUMNS = '{DummySaveColumns}';
+    const DUMMY_FORM_EXTRA = '{DummyFormExtra}';
 
     public function __construct(Filesystem $files)
     {
@@ -131,6 +132,7 @@ class CurdGenCommand extends Command{
         $dummy_form_columns = '';
         $dummy_edit_columns = '';
         $dummy_save_columns = '';
+        $dummy_form_extra = '';
         foreach($columns_set as $column){
             $dump_table_str = Parser::tableColumn($column);
             if($dump_table_str !== false){
@@ -140,6 +142,11 @@ class CurdGenCommand extends Command{
             $dump_form_str = Parser::formColumn($column);
             if($dump_form_str !== false){
                 $dummy_form_columns .= $dump_form_str . PHP_EOL;
+            }
+
+            $dump_form_extra_str = Parser::formExtra($column);
+            if($dump_form_extra_str !== false){
+                $dummy_form_extra .= $dump_form_extra_str . PHP_EOL;
             }
 
             $dump_edit_str = Parser::editColumn($column);
@@ -169,6 +176,7 @@ class CurdGenCommand extends Command{
         $stub = str_replace(self::DUMMY_FORM_COLUMNS, trim($dummy_form_columns), $stub);
         $stub = str_replace(self::DUMMY_MODEL, trim($dummy_model), $stub);
         $stub = str_replace(self::DUMMY_MODEL_TITLE, trim($dummy_model_title), $stub);
+        $stub = str_replace(self::DUMMY_FORM_EXTRA, trim($dummy_form_extra), $stub);
 
         return LARA_DIR . '/../app/Admin/Controller/' . $dummy_model . 'Controller.class.php';
     }

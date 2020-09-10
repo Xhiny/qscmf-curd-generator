@@ -4,6 +4,7 @@ namespace CurdGen;
 use CurdGen\Type\Factory;
 use CurdGen\Type\IAuto;
 use CurdGen\Type\IForm;
+use CurdGen\Type\IFormExtra;
 use CurdGen\Type\ISave;
 use CurdGen\Type\ITable;
 use CurdGen\Type\IValidate;
@@ -190,6 +191,22 @@ p
             if($type instanceof ISave && isset($pair['save']) && $pair['save'] == 'true'){
                 $save_res = $type->saveParse();
                 $res .= $save_res;
+            }
+        }
+        if($res){
+            return $res;
+        }
+        return false;
+    }
+
+    static public function formExtra($column_set){
+        $pair = self::exec($column_set->COLUMN_COMMENT);
+
+        $res = '';
+        if(isset($pair['type'])){
+            $type = Factory::getInstance($pair['type'], $pair, $column_set);
+            if($type instanceof IFormExtra){
+                $res = $type->formExtraParse();
             }
         }
         if($res){

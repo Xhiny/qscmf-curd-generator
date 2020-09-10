@@ -68,7 +68,7 @@ class {DummyModel}Controller extends QsListController{
         } else {
             $info = D('{DummyModel}')->getOne($id);
 
-
+            {DummyFormExtra}
             $builder = new \Qscmf\Builder\FormBuilder();
             $builder->setMetaTitle('编辑{DummyModelTitle}')
                 ->setPostUrl(U('edit'))
@@ -154,6 +154,7 @@ class {DummyModel}Controller extends QsListController{
                 $builder->setFormData($data_list);
             }
 
+            {DummyFormExtra}
             $builder->setMetaTitle('新增{DummyModelTitle}')
                 ->setNIDByNode(MODULE_NAME, CONTROLLER_NAME, 'index')
                 ->setPostUrl(U('add'))
