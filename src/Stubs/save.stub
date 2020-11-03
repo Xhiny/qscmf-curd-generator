@@ -5,6 +5,6 @@
                 {DummySaveColumns}
                 D('{DummyModel}')->where('id=' . $v)->save($save_data);
             }
-            $this->success('保存成功', U('index'));
+            $this->success('保存成功', 'javascript:location.reload();');
         }
     }
