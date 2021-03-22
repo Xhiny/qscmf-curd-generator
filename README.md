@@ -154,6 +154,14 @@ composer require quansitech/qscmf-curd-generator
 > $table->string('email', 50)->comment('@title=邮箱;@type=email;');
 >```
 
++ district
+> 中国省市区地址
+>
+> 样例代码
+>```php
+> $table->integer('place')->comment('@title=住址;@type=district;');
+>```
+
 3. length
 > 设置字段长度限制, 第一个数字为最小长度， 第二个数字最大长度， 两个数字用逗号分隔
 >
