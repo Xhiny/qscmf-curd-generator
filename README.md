@@ -162,12 +162,12 @@ composer require quansitech/qscmf-curd-generator
 > $table->integer('place')->comment('@title=住址;@type=district;');
 >```
 
-+ number
++ num
 > 数字
 >
 > 样例代码
 >```php
-> $table->integer('price')->comment('@title=单价;@type=number;');
+> $table->integer('price')->comment('@title=单价;@type=num;');
 >```
 
 3. length
