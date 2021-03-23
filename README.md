@@ -162,6 +162,14 @@ composer require quansitech/qscmf-curd-generator
 > $table->integer('place')->comment('@title=住址;@type=district;');
 >```
 
++ number
+> 数字
+>
+> 样例代码
+>```php
+> $table->integer('price')->comment('@title=单价;@type=number;');
+>```
+
 3. length
 > 设置字段长度限制, 第一个数字为最小长度， 第二个数字最大长度， 两个数字用逗号分隔
 >
