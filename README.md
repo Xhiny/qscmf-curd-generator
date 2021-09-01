@@ -64,6 +64,22 @@ composer require quansitech/qscmf-curd-generator
 >> $table->tinyInteger('delete_status')->comment('@title=删除状态;@type=select;@list=boolStatus; 1 启用 0 禁用');
 >>```
 
++ radio
+> list模式(通过DBCont获取下拉列表)
+>
+>> list
+>>
+>> DBCont中的变量名
+>>
+>> 如 Qscmf\Lib\DBCont 中的禁用启用项 $_status, 那么它的list就是 status
+>>
+>> 又如 Qscmf\Lib\DBCont 中的是否项 $_bool_status $_bool_status， 那么它的list就是 boolStatus
+>>
+>> 样例代码
+>>```php
+>> $table->tinyInteger('top')->comment('@title=置顶;@type=radio;@list=boolStatus; 1 是 0 否');
+>>```
+
 + date 
 > 日期类型 
 > 样例代码
