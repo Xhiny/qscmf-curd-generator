@@ -89,7 +89,7 @@ composer require quansitech/qscmf-curd-generator
 > 单图片（上传到服务器）
 > 样例代码
 >```php
-> $table->bigIncrements('cover')->comment('@title=封面;@type=picture;');
+> $table->bigInteger('cover')->comment('@title=封面;@type=picture;');
 >```
 
 + pictures
