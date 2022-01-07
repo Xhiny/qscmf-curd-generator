@@ -15,7 +15,9 @@ class CurdGenCommand extends Command{
      *
      * @var string
      */
-    protected $signature = 'qscmf:curd-gen {table_name : The name of table}';
+    protected $signature = 'qscmf:curd-gen {table_name : The name of table}
+                                           {--T|type=new :  new(default):create a new page to operate add or edit data;current :  on the current page to operate add or edit data}
+                            ';
 
     /**
      * The console command description.
@@ -36,6 +38,24 @@ class CurdGenCommand extends Command{
     const DUMMY_SAVE_COLUMNS = '{DummySaveColumns}';
     const DUMMY_FORM_EXTRA = '{DummyFormExtra}';
 
+    const DUMMY_ADD = '{DummyAdd}';
+    const DUMMY_EDIT = '{DummyEdit}';
+
+    const DUMMY_ADD_TOP_BUTTON = '{DummyAddTopButton}';
+    const DUMMY_ADD_MODAL = '{DummyAddModal}';
+    const DUMMY_ADD_FORM_DISPLAY = '{DummyAddFormDisplay}';
+    const DUMMY_ADD_SUCCESS_JUMP_URL = '{DummyAddSuccessJumpUrl}';
+    const DUMMY_ADD_META_TITLE = '{DummyAddMetaTitle}';
+
+    const DUMMY_EDIT_RIGHT_BUTTON = '{DummyEditRightButton}';
+    const DUMMY_EDIT_MODAL = '{DummyEditModal}';
+    const DUMMY_EDIT_FORM_DISPLAY = '{DummyEditFormDisplay}';
+    const DUMMY_EDIT_SUCCESS_JUMP_URL = '{DummyEditSuccessJumpUrl}';
+    const DUMMY_EDIT_META_TITLE = '{DummyEditMetaTitle}';
+
+    const DUMMY_TABLE_DATA_LIST = '{DummyTableDataList}';
+    const DUMMY_TABLE_BTN_PLACEHOLDER = '{DummyTableBtnPlaceholder}';
+
     public function __construct(Filesystem $files)
     {
         parent::__construct();
@@ -47,6 +67,7 @@ class CurdGenCommand extends Command{
 
     public function handle(){
         $table = $this->input->getArgument('table_name');
+        $type = $this->option('type');
 
         $schema = env('DB_DATABASE');
         $columns_res = DB::select("select * from information_schema.columns where TABLE_SCHEMA='{$schema}' and TABLE_NAME='{$table}'");
@@ -54,7 +75,7 @@ class CurdGenCommand extends Command{
 
         $stub = $this->getStub('controller');
 
-        $path = $this->populateControllerStub($stub, $columns_res, $table_res);
+        $path = $this->populateControllerStub($stub, $columns_res, $table_res, $type);
         $path_arr = explode('/', $path);
         if($this->files->exists($path)){
             $confirm = $this->confirm( $path_arr[count($path_arr) - 1]. '已经存在，确定要覆盖吗');
@@ -118,7 +139,7 @@ class CurdGenCommand extends Command{
         return LARA_DIR . '/../app/Common/Model/' . $dummy_model . 'Model.class.php';
     }
 
-    protected function populateControllerStub(&$stub, $columns_set, $table_set){
+    protected function populateControllerStub(&$stub, $columns_set, $table_set, $type = null){
         $dummy_model = $this->getDummyModel($table_set[0]->TABLE_NAME);
 
         $key_pair = Parser::exec($table_set[0]->TABLE_COMMENT);
@@ -171,6 +192,17 @@ class CurdGenCommand extends Command{
             $stub = str_replace(self::DUMMY_SAVE_TOP_BUTTON, '', $stub);
         }
 
+        self::buildOperate($stub, $type, $table_btn_placeholder);
+
+        if(strlen($table_btn_placeholder) > 0){
+            self::injectTableDataListTemplate($stub);
+
+            $stub = str_replace(self::DUMMY_TABLE_BTN_PLACEHOLDER, trim($table_btn_placeholder), $stub);
+        }
+        else{
+            $stub = str_replace(self::DUMMY_TABLE_DATA_LIST, '', $stub);
+        }
+
         $stub = str_replace(self::DUMMY_TABLE_COLUMNS, trim($dummy_table_columns), $stub);
         $stub = str_replace(self::DUMMY_EDIT_COLUMNS, trim($dummy_edit_columns), $stub);
         $stub = str_replace(self::DUMMY_FORM_COLUMNS, trim($dummy_form_columns), $stub);
@@ -192,5 +224,56 @@ class CurdGenCommand extends Command{
 template;
 
         $stub = str_replace(self::DUMMY_SAVE_TOP_BUTTON, $save_top_button, $stub);
+    }
+
+    protected function buildOperate(&$stub, $type, &$table_btn_placeholder){
+        self::injectAddTemplate($stub);
+        self::injectEditTemplate($stub);
+
+        switch($type){
+            case 'current':
+                list($add_top_table_btn,$add_top_success_url,$add_top_form_str,$add_top_modal_fun, $add_btn_placeholder) = Parser::currentPage('addTopButton');
+                list($edit_top_table_btn,$edit_top_success_url,$edit_top_form_str,$edit_top_modal_fun, $edit_btn_placeholder) = Parser::currentPage('editRightButton');
+                $add_meta_title = '';
+                $edit_meta_title = '';
+                break;
+            default:
+                list($add_top_table_btn,$add_top_success_url,$add_top_form_str, $add_meta_title) = Parser::newPage('addTopButton');
+                list($edit_top_table_btn,$edit_top_success_url,$edit_top_form_str, $edit_meta_title) = Parser::newPage('editRightButton');
+                $add_top_modal_fun ='';
+                $edit_top_modal_fun ='';
+                $add_btn_placeholder = '';
+                $edit_btn_placeholder = '';
+                break;
+        }
+
+        $stub = str_replace(self::DUMMY_ADD_TOP_BUTTON, $add_top_table_btn, $stub);
+        $stub = str_replace(self::DUMMY_ADD_SUCCESS_JUMP_URL, $add_top_success_url, $stub);
+        $stub = str_replace(self::DUMMY_ADD_FORM_DISPLAY, $add_top_form_str, $stub);
+        $stub = str_replace(self::DUMMY_ADD_MODAL, $add_top_modal_fun, $stub);
+        $stub = str_replace(self::DUMMY_ADD_META_TITLE, $add_meta_title, $stub);
+
+        $stub = str_replace(self::DUMMY_EDIT_RIGHT_BUTTON, $edit_top_table_btn, $stub);
+        $stub = str_replace(self::DUMMY_EDIT_SUCCESS_JUMP_URL, $edit_top_success_url, $stub);
+        $stub = str_replace(self::DUMMY_EDIT_FORM_DISPLAY, $edit_top_form_str, $stub);
+        $stub = str_replace(self::DUMMY_EDIT_MODAL, $edit_top_modal_fun, $stub);
+        $stub = str_replace(self::DUMMY_EDIT_META_TITLE, $edit_meta_title, $stub);
+
+        $table_btn_placeholder = implode(PHP_EOL, array_filter([$add_btn_placeholder,$edit_btn_placeholder]));
+    }
+
+    protected function injectTableDataListTemplate(&$stub){
+        $table_data_list = $this->getStub('tableDataList');
+        $stub = str_replace(self::DUMMY_TABLE_DATA_LIST, $table_data_list, $stub);
+    }
+
+    protected function injectAddTemplate(&$stub){
+        $add = $this->getStub('add');
+        $stub = str_replace(self::DUMMY_ADD, $add, $stub);
+    }
+
+    protected function injectEditTemplate(&$stub){
+        $edit = $this->getStub('edit');
+        $stub = str_replace(self::DUMMY_EDIT, $edit, $stub);
     }
 }

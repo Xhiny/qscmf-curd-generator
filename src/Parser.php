@@ -214,4 +214,43 @@ p
         }
         return false;
     }
+
+    static public function currentPage($button){
+        $type = \CurdGen\Operate\Factory::getInstance($button);
+
+        $res = [];
+        if ($type instanceof \CurdGen\Operate\ICurrentPage){
+            $table_btn = $type->currentTableButtonParse();
+            $success_url = $type->currentSuccessJumpUrlParse();
+            $form_str = $type->currentFormDisplayParse();
+            $modal_fun = $type->currentModalFunParse();
+            $table_btn_placeholder = $type->currentTableBtnPlaceholderParse();
+            $res = [$table_btn,$success_url,$form_str,$modal_fun, $table_btn_placeholder];
+        }
+
+        if ($res){
+            return $res;
+        }
+
+        return false;
+    }
+
+    static public function newPage($button){
+        $type = \CurdGen\Operate\Factory::getInstance($button);
+
+        $res = [];
+        if ($type instanceof \CurdGen\Operate\INewPage){
+            $table_btn = $type->newTableButtonParse();
+            $success_url = $type->newSuccessJumpUrlParse();
+            $form_str = $type->newFormDisplayParse();
+            $meta_title = $type->newMetaTitleParse();
+            $res = [$table_btn,$success_url,$form_str, $meta_title];
+        }
+
+        if ($res){
+            return $res;
+        }
+
+        return false;
+    }
 }

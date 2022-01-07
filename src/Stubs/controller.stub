@@ -19,12 +19,14 @@ class {DummyModel}Controller extends QsListController{
 
         $data_list = $model->getListForPage([], $page->nowPage, $page->listRows, 'create_date desc');
 
+        {DummyTableDataList}
 
         $builder = new \Qscmf\Builder\ListBuilder();
 
 
         $builder = $builder->setMetaTitle('{DummyModelTitle}列表');
-        $builder->addTopButton('addnew')
+        $builder
+            {DummyAddTopButton}
             ->addTopButton('forbid')
             ->addTopButton('resume')
             ->addTopButton('delete')
@@ -34,7 +36,7 @@ class {DummyModel}Controller extends QsListController{
             ->addTableColumn('right_button', '操作', 'btn')
             ->setTableDataList($data_list)
             ->setTableDataPage($page->show())
-            ->addRightButton('edit')
+            {DummyEditRightButton}
             ->addRightButton('forbid')
             ->addRightButton('delete')
             ->display();
@@ -42,44 +44,9 @@ class {DummyModel}Controller extends QsListController{
 
 {DummySave}
 
-    public function edit($id){
-        if (IS_POST) {
-            parent::autoCheckToken();
-            $m_id = I('post.id');
-            $data = I('post.');
-            $model = D('{DummyModel}');
-            if(!$m_id){
-                E('缺少{DummyModelTitle}ID');
-            }
 
-            $ent = $model->getOne($m_id);
-            if(!$ent){
-                E('不存在{DummyModelTitle}');
-            }
+{DummyEdit}
 
-            {DummyEditColumns}
-            if($model->createSave($ent) === false){
-                $this->error($model->getError());
-            }
-            else{
-                sysLogs('修改{DummyModelTitle}, id:' . $m_id);
-                $this->success('修改成功', 'javascript:location.href=document.referrer;');
-            }
-        } else {
-            $info = D('{DummyModel}')->getOne($id);
-
-            {DummyFormExtra}
-            $builder = new \Qscmf\Builder\FormBuilder();
-            $builder->setMetaTitle('编辑{DummyModelTitle}')
-                ->setPostUrl(U('edit'))
-                ->setNIDByNode(MODULE_NAME, CONTROLLER_NAME, 'index')
-                ->addFormItem('id', 'hidden', 'ID')
-                {DummyFormColumns}
-                ->setFormData($info)
-                ->display();
-
-        }
-    }
 
     public function forbid(){
         $ids = I('ids');
@@ -127,41 +94,7 @@ class {DummyModel}Controller extends QsListController{
         }
     }
 
-    public function add(){
-        if (IS_POST) {
-            parent::autoCheckToken();
-            $data = I('post.');
 
-            $model = D('{DummyModel}');
-            $r = $model->createAdd($data);
-            if($r === false){
-                $this->error($model->getError());
-            }
-            else{
-                sysLogs('新增{DummyModelTitle}, id:' . $r);
-
-                $this->success(l('add') . l('success'), 'javascript:location.href=document.referrer;');
-            }
-        }
-        else {
-            $builder = new \Qscmf\Builder\FormBuilder();
-
-            $data_list = array(
-                "status"=>1
-            );
-
-            if($data_list){
-                $builder->setFormData($data_list);
-            }
-
-            {DummyFormExtra}
-            $builder->setMetaTitle('新增{DummyModelTitle}')
-                ->setNIDByNode(MODULE_NAME, CONTROLLER_NAME, 'index')
-                ->setPostUrl(U('add'))
-                {DummyFormColumns}
-                ->display();
-        }
-    }
-
+{DummyAdd}
 
 }

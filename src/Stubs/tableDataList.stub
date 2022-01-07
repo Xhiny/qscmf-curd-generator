@@ -1,0 +1,4 @@
+
+        foreach($data_list as &$data){
+            {DummyTableBtnPlaceholder}
+        }
