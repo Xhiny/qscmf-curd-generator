@@ -211,9 +211,9 @@ composer require quansitech/qscmf-curd-generator
 table_name 表名
 
 选项值
-type 可选值，默认为new
-    new: 在新页面进行新增、编辑操作，适用于业务逻辑比较复杂，表单比较重的场景
-    current: 在当前页面进行新增、编辑操作，适用于业务简单，表单比较轻的场景
+mode 可选值，默认为standard
+    standard: 在新页面进行新增、编辑操作，适用于业务逻辑比较复杂，表单比较重的场景
+    float: 在当前页面使用模态框进行新增、编辑操作，适用于业务简单，表单比较轻的场景
 ```
 
 ```php
@@ -221,10 +221,10 @@ php artisan qscmf:curd-gen 表名
 ```
 
 ```php
-php artisan qscmf:curd-gen 表名 --type=current
+php artisan qscmf:curd-gen 表名 --mode=float
 
 // 选项可使用简写
-php artisan qscmf:curd-gen 表名 -Tcurrent
+php artisan qscmf:curd-gen 表名 -Mfloat
 ```
 
 执行后会自动在app/Admin/Controller和app/Common/Model下分别生成controller和model
