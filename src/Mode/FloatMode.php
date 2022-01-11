@@ -6,45 +6,75 @@ class FloatMode extends AMode
 {
     protected $mode = 'float';
 
+    public function injectAddTopButton(){
+        return <<<sample
+->addTopButton('modal', ['title' => '新增'],'','',\$this->buildAddModal())
+sample;
 
-    const DUMMY_ADD_MODAL = '{DummyAddModal}';
-
-    const DUMMY_EDIT_MODAL = '{DummyEditModal}';
-
-
-    public function addTopButton(&$stub, &$add_btn_placeholder = null)
-    {
-        list($add_top_modal_fun, $add_btn_placeholder, $operate) = $this->newButton('addTopButton');
-
-        $operate = str_replace(self::DUMMY_ADD_MODAL, $add_top_modal_fun, $operate);
-
-        return $operate;
     }
 
-    public function editRightButton(&$stub, &$edit_btn_placeholder=null)
-    {
-        list($edit_top_modal_fun, $edit_btn_placeholder, $operate) = $this->newButton('editRightButton');
+    public function injectEditRightButton(){
+        return <<<sample
+->addRightButton('modal',['title' => '编辑'], '', '', 'list_edit_form')
+sample;
 
-        $operate = str_replace(self::DUMMY_EDIT_MODAL, $edit_top_modal_fun, $operate);
-
-        return $operate;
     }
 
-    protected function newButton($button){
-        $type = \CurdGen\Operate\Factory::getInstance($button, $this->mode);
+    public function funSuccessJumpUrl(){
+        return <<<sample
+javascript:location.reload();
+sample;
 
-        $res = [];
-        if ($type instanceof \CurdGen\Operate\IOperate){
-            $modal_fun = $type->modalFunParse();
-            $table_btn_placeholder = $type->tableBtnPlaceholderParse();
-            $operate = $type->operateParse();
-            $res = [$modal_fun, $table_btn_placeholder, $operate];
-        }
+    }
 
-        if ($res){
-            return $res;
-        }
+    public function funFormDisplay(){
+        return <<<sample
+                ->setShowBtn(false);
+                
+            return \$builder->display(true);
+sample;
 
-        return false;
+    }
+
+    public function editMetaTitle(){
+        return '';
+    }
+
+    public function addMetaTitle(){
+        return '';
+    }
+
+    public function editExtraFun(){
+        return <<<fun
+    protected function buildEditModal(\$id=null){
+        \$modal = (new \Qs\ModalButton\ModalButtonBuilder());
+        return
+            \$modal
+                ->setTitle('编辑{DummyModelTitle}')
+                ->setBackdrop(false)
+                ->setKeyboard(false)
+                ->setBody(\$this->edit(\$id));
+    }
+fun;
+    }
+
+    public function addExtraFun(){
+        return <<<fun
+    protected function buildAddModal(){
+        \$modal = (new \Qs\ModalButton\ModalButtonBuilder());
+        return
+            \$modal
+                ->setTitle('新增{DummyModelTitle}')
+                ->setBackdrop(false)
+                ->setKeyboard(false)
+                ->setBody(\$this->add());
+    }
+fun;
+    }
+
+    public function tableBtnPlaceholder(){
+        return <<<sample
+    \$data['list_edit_form'] = \$this->buildEditModal(\$data['id']);
+sample;
     }
 }

@@ -5,7 +5,7 @@ class Factory{
 
     public static function getInstance($type, $comment, $column_set, $mode = ''){
         $type = ucfirst($type);
-        $cls = self::genClsNamespace($type, $mode);
+        $cls = "CurdGen\\Type\\{$type}";
         if(class_exists($cls)){
             return new $cls($comment, $column_set);
         }
@@ -14,17 +14,4 @@ class Factory{
         }
     }
 
-    protected static function genClsNamespace($type, $mode){
-        $cls = '';
-        if ($mode){
-            $mode = ucfirst($mode);
-            $cls = "CurdGen\\Mode\\Type\\{$mode}\\Column\\Type\\{$type}";
-        }
-
-        if(!$cls || !class_exists($cls)){
-            $cls = "CurdGen\\Type\\{$type}";
-        }
-
-        return $cls;
-    }
 }

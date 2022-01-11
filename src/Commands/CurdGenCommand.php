@@ -27,10 +27,6 @@ class CurdGenCommand extends Command{
      */
     protected $description = 'auto build curd code feel like rocket';
 
-    const DUMMY_MODEL = '{DummyModel}';
-    const DUMMY_MODEL_VALIDATE = '{DummyValidate}';
-    const DUMMY_MODEL_AUTO = '{DummyAuto}';
-
     public function __construct(Filesystem $files)
     {
         parent::__construct();
@@ -49,7 +45,7 @@ class CurdGenCommand extends Command{
 
         $stub = $this->getStub('controller');
 
-        $path = $this->populateControllerStub1($stub, $columns_res, $table_res, $mode);
+        $path = $this->populateControllerStub($stub, $columns_res, $table_res, $mode);
         $path_arr = explode('/', $path);
         if($this->files->exists($path)){
             $confirm = $this->confirm( $path_arr[count($path_arr) - 1]. '已经存在，确定要覆盖吗');
@@ -61,7 +57,7 @@ class CurdGenCommand extends Command{
 
         $stub = $this->getStub('model');
 
-        $path = $this->populateModelStub($stub, $columns_res, $table_res);
+        $path = $this->populateModelStub($stub, $columns_res, $table_res, $mode);
         $path_arr = explode('/', $path);
         if($this->files->exists($path)){
             $confirm = $this->confirm( $path_arr[count($path_arr) - 1]. '已经存在，确定要覆盖吗');
@@ -84,36 +80,20 @@ class CurdGenCommand extends Command{
         return $this->files->get(__DIR__ ."/../Stubs/{$stub_type}.stub");
     }
 
-    protected function populateModelStub(&$stub, $columns_set, $table_set){
+    protected function populateModelStub(&$stub, $columns_set, $table_set, $mode= null){
         $dummy_model = Helper::getDummyModel($table_set[0]->TABLE_NAME);
 
-        $dummy_validate = '';
-        $dummy_auto = '';
-
-        foreach($columns_set as $column){
-            $dummy_validate_str = Parser::modelValidate($column);
-            if($dummy_validate_str !== false){
-                $dummy_validate .= $dummy_validate_str;
-            }
-
-            $dummy_auto_str = Parser::modelAuto($column);
-            if($dummy_auto_str !== false){
-                $dummy_auto .= $dummy_auto_str;
-            }
-        }
-
-        $stub = str_replace(self::DUMMY_MODEL, trim($dummy_model), $stub);
-        $stub = str_replace(self::DUMMY_MODEL_VALIDATE, rtrim($dummy_validate), $stub);
-        $stub = str_replace(self::DUMMY_MODEL_AUTO, rtrim($dummy_auto), $stub);
+        $mode = $this->getMode($mode);
+        Parser::modeModel($stub, $columns_set, $table_set, $mode);
 
         return LARA_DIR . '/../app/Common/Model/' . $dummy_model . 'Model.class.php';
     }
 
-    protected function populateControllerStub1(&$stub, $columns_set, $table_set, $mode = null){
+    protected function populateControllerStub(&$stub, $columns_set, $table_set, $mode = null){
         $dummy_model = Helper::getDummyModel($table_set[0]->TABLE_NAME);
 
         $mode = $this->getMode($mode);
-        Parser::modeBuild($stub, $columns_set, $table_set, $mode);
+        Parser::modeController($stub, $columns_set, $table_set, $mode);
 
         return LARA_DIR . '/../app/Admin/Controller/' . $dummy_model . 'Controller.class.php';
     }
