@@ -3,7 +3,7 @@ namespace CurdGen\Type;
 
 use CurdGen\Helper;
 
-class Date extends AbstractType implements ITable , IForm, IAuto {
+class Date extends AbstractType implements ITable , IForm, IAuto , ISave{
 
     public function formParse()
     {
@@ -20,7 +20,19 @@ class Date extends AbstractType implements ITable , IForm, IAuto {
             'type' => Helper::wrap('date')
         ];
 
+        if(isset($this->comment['save']) &&  $this->comment['save'] == 'true'){
+            $table_item['value'] = Helper::wrap('');
+            $table_item['editable'] = 'true';
+        }
+
         return $table_item;
+    }
+
+    public function saveParse()
+    {
+        return <<<sample
+                \$save_data['{$this->column_set->COLUMN_NAME}'] = strtotime(\$data['{$this->column_set->COLUMN_NAME}'][\$k]);
+sample;
     }
 
     public function autoParse()

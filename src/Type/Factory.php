@@ -3,7 +3,7 @@ namespace CurdGen\Type;
 
 class Factory{
 
-    public static function getInstance($type, $comment, $column_set){
+    public static function getInstance($type, $comment, $column_set, $mode = ''){
         $type = ucfirst($type);
         $cls = "CurdGen\\Type\\{$type}";
         if(class_exists($cls)){
@@ -13,4 +13,5 @@ class Factory{
             throw new \Exception('未知类型');
         }
     }
+
 }

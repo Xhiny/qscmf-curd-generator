@@ -38,4 +38,8 @@ class Helper{
 
         return $dbcont_cls;
     }
+
+    static public function getDummyModel($table_name){
+        return ucfirst(Str::camel(str_replace(env('DB_PREFIX'), '', $table_name)));
+    }
 }

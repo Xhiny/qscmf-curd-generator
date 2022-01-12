@@ -19,12 +19,14 @@ class {DummyModel}Controller extends QsListController{
 
         $data_list = $model->getListForPage([], $page->nowPage, $page->listRows, 'create_date desc');
 
+        {DummyTableDataList}
 
         $builder = new \Qscmf\Builder\ListBuilder();
 
 
         $builder = $builder->setMetaTitle('{DummyModelTitle}列表');
-        $builder->addTopButton('addnew')
+        $builder
+            {DummyAddTopButton}
             ->addTopButton('forbid')
             ->addTopButton('resume')
             ->addTopButton('delete')
@@ -34,7 +36,7 @@ class {DummyModel}Controller extends QsListController{
             ->addTableColumn('right_button', '操作', 'btn')
             ->setTableDataList($data_list)
             ->setTableDataPage($page->show())
-            ->addRightButton('edit')
+            {DummyEditRightButton}
             ->addRightButton('forbid')
             ->addRightButton('delete')
             ->display();
@@ -42,7 +44,18 @@ class {DummyModel}Controller extends QsListController{
 
 {DummySave}
 
-    public function edit($id){
+
+    {DummyEditExtraFun}
+
+    protected function addBuilderFormItem(&$builder){
+        {DummyFormExtra}
+
+        $builder
+        {DummyFormColumns}
+        ;
+    }
+
+    public function edit($id=null){
         if (IS_POST) {
             parent::autoCheckToken();
             $m_id = I('post.id');
@@ -63,23 +76,25 @@ class {DummyModel}Controller extends QsListController{
             }
             else{
                 sysLogs('修改{DummyModelTitle}, id:' . $m_id);
-                $this->success('修改成功', 'javascript:location.href=document.referrer;');
+                $this->success('修改成功', '{DummyFunSuccessJumpUrl}');
             }
         } else {
             $info = D('{DummyModel}')->getOne($id);
 
-            {DummyFormExtra}
             $builder = new \Qscmf\Builder\FormBuilder();
-            $builder->setMetaTitle('编辑{DummyModelTitle}')
+
+            $this->addBuilderFormItem($builder);
+
+            $builder->setMetaTitle('{DummyEditMetaTitle}')
                 ->setPostUrl(U('edit'))
-                ->setNIDByNode(MODULE_NAME, CONTROLLER_NAME, 'index')
                 ->addFormItem('id', 'hidden', 'ID')
-                {DummyFormColumns}
                 ->setFormData($info)
-                ->display();
+                {DummyFunFormDisplay}
+
 
         }
     }
+
 
     public function forbid(){
         $ids = I('ids');
@@ -127,6 +142,10 @@ class {DummyModel}Controller extends QsListController{
         }
     }
 
+
+    {DummyAddExtraFun}
+
+
     public function add(){
         if (IS_POST) {
             parent::autoCheckToken();
@@ -140,7 +159,8 @@ class {DummyModel}Controller extends QsListController{
             else{
                 sysLogs('新增{DummyModelTitle}, id:' . $r);
 
-                $this->success(l('add') . l('success'), 'javascript:location.href=document.referrer;');
+
+                $this->success(l('add') . l('success'), '{DummyFunSuccessJumpUrl}');
             }
         }
         else {
@@ -154,14 +174,12 @@ class {DummyModel}Controller extends QsListController{
                 $builder->setFormData($data_list);
             }
 
-            {DummyFormExtra}
-            $builder->setMetaTitle('新增{DummyModelTitle}')
-                ->setNIDByNode(MODULE_NAME, CONTROLLER_NAME, 'index')
+            $this->addBuilderFormItem($builder);
+
+            $builder->setMetaTitle('{DummyAddMetaTitle}')
                 ->setPostUrl(U('add'))
-                {DummyFormColumns}
-                ->display();
+                {DummyFunFormDisplay}
         }
     }
-
 
 }
