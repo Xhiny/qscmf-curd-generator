@@ -247,7 +247,8 @@ sample;
 
     public function funFormDisplay(){
         return <<<sample
-->display();
+->setNIDByNode(MODULE_NAME, CONTROLLER_NAME, 'index')
+                ->display();
 sample;
 
     }
