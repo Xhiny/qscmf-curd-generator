@@ -12,7 +12,7 @@ class RichText extends AbstractType implements IForm, IFormExtra {
             'tip' => Helper::wrap(''),
             'options' => Helper::wrap(''),
             'extra_class' => Helper::wrap(''),
-            'extra_attr' => Helper::wrap("data-url=/Public/libs/ueditor/php/controller.php?url_prefix=\$url_prefix data-forcecatchremote='true'")
+            'extra_attr' => Helper::wrap("data-url=".asset("/libs/ueditor/php/controller.php")."?url_prefix=\$url_prefix data-forcecatchremote='true'")
         ];
 
         return $form_item;
