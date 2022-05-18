@@ -8,10 +8,10 @@ class RichText extends AbstractType implements IForm, IFormExtra {
     public function formParse()
     {
         if(isset($this->comment['oss']) && $this->comment['oss']){
-            $extra_attr = "data-url=\$domain/public/libs/ueditor/php/controller.php?oss=1&type=editor&url_suffix=\$url_suffix data-forcecatchremote='true'";
+            $extra_attr = "data-url=\$domain/Public/libs/ueditor/php/controller.php?oss=1&type=editor&url_suffix=\$url_suffix data-forcecatchremote='true'";
         }
         else{
-            $extra_attr = "data-url=\$domain/public/libs/ueditor/php/controller.php?type=editor&url_prefix=\$url_prefix data-forcecatchremote='true'";
+            $extra_attr = "data-url=\$domain/Public/libs/ueditor/php/controller.php?type=editor&url_prefix=\$url_prefix data-forcecatchremote='true'";
         }
 
         $form_item = [
