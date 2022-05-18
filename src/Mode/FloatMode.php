@@ -31,7 +31,7 @@ sample;
         return <<<sample
                 ->setShowBtn(false);
                 
-            return \$builder->display(true);
+            return \$builder->build(true);
 sample;
 
     }

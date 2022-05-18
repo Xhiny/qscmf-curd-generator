@@ -56,6 +56,9 @@ abstract class AMode implements IMode
                 return $res . $validate_res;
             }
         }
+        if(isset($pair['require'])){
+            $res .= self::validateRequire($column_set, $pair);
+        }
         if($res){
             return $res;
         }
@@ -99,6 +102,18 @@ p
 p
             . PHP_EOL;
 
+    }
+
+    protected function validateRequire($column_set, $pair){
+        if(!isset($pair['title'])){
+            throw new \Exception('not found title');
+        }
+
+        $msg = $pair['title'] . '不能为空';
+        return <<<p
+        ['{$column_set->COLUMN_NAME}', 'require', '{$msg}', self::MUST_VALIDATE, '', self::MODEL_BOTH],
+p
+            . PHP_EOL;
     }
 
     public function tableColumn($column_set){
@@ -248,7 +263,7 @@ sample;
     public function funFormDisplay(){
         return <<<sample
 ->setNIDByNode(MODULE_NAME, CONTROLLER_NAME, 'index')
-                ->display();
+                ->build();
 sample;
 
     }

@@ -39,7 +39,7 @@ class {DummyModel}Controller extends QsListController{
             {DummyEditRightButton}
             ->addRightButton('forbid')
             ->addRightButton('delete')
-            ->display();
+            ->build();
     }
 
 {DummySave}
