@@ -245,7 +245,7 @@ composer require quansitech/qscmf-curd-generator
    > $table->mediumInteger('sort')->comment('@title=排序;@save=true;');
    > ```
    > 
-   > 目前支持save的类型有text、url、phone、email、num
+   > 目前支持save的类型有text、url、phone、email、num、select、date、textarea
 
 5. require
    
