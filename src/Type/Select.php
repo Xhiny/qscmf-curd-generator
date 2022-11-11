@@ -4,7 +4,7 @@ namespace CurdGen\Type;
 use CurdGen\Helper;
 use Illuminate\Support\Str;
 
-class Select extends AbstractType implements ITable , IForm {
+class Select extends AbstractType implements ITable , IForm, ISave {
 
 
     public function formParse()
@@ -75,6 +75,7 @@ class Select extends AbstractType implements ITable , IForm {
             }
 
             $value = $this->genModelValue($table, $show);
+            $options = $this->genModelOptions($table, $show);
         }
         else{
             $list = $this->comment['list'];
@@ -83,6 +84,7 @@ class Select extends AbstractType implements ITable , IForm {
             }
 
             $value = $this->genSelectValue($list);
+            $options = $this->genSelectOptions($list);
         }
 
 
@@ -91,6 +93,19 @@ class Select extends AbstractType implements ITable , IForm {
             'value' => $value
         ];
 
+        if(isset($this->comment['save']) &&  $this->comment['save'] == 'true'){
+            $table_item['type'] = Helper::wrap('select');
+            $table_item['value'] = $options;
+            $table_item['editable'] = 'true';
+        }
+
         return $table_item;
+    }
+
+    public function saveParse()
+    {
+        return <<<sample
+                \$save_data['{$this->column_set->COLUMN_NAME}'] = \$data['{$this->column_set->COLUMN_NAME}'][\$k];
+sample;
     }
 }
