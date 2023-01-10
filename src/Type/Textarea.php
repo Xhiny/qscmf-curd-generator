@@ -30,6 +30,6 @@ sample;
             $table_item['editable'] = 'true';
         }
 
-        return (array)$table_item;
+        return $table_item ?? [];
     }
 }
