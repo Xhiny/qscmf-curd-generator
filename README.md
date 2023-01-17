@@ -88,6 +88,24 @@ composer require quansitech/qscmf-curd-generator
   > > $table->tinyInteger('top')->comment('@title=置顶;@type=radio;@list=boolStatus; 1 是 0 否');
   > > ```
 
++ checkbox
+
+  > list模式(通过DBCont获取下拉列表)
+  >
+  > > list
+  > >
+  > > DBCont中的变量名
+  > >
+  > > 如 Qscmf\Lib\DBCont 中的禁用启用项 $_status, 那么它的list就是 status
+  > >
+  > > 又如 Qscmf\Lib\DBCont 中的是否项 $_bool_status $_bool_status， 那么它的list就是 boolStatus
+  > >
+  > > 样例代码
+  > >
+  > > ```php
+  > > $table->string('businessCate')->comment('@title=主营业务;@type=checkbox;@list=businessCate; 1 咨询 2 研发 3 设计');
+  > > ```
+
 + date 
   
   > 日期类型 
