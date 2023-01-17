@@ -48,11 +48,12 @@ class Checkbox extends AbstractType implements ITable , IForm {
             throw new \Exception('checkbox type not found list');
         }
 
-        $value = $this->genCheckboxValue($list);
+        $value = $this->genCheckboxOptions($list);
 
 
         $table_item = [
-            'type' => Helper::wrap('checkbox')
+            'type' => Helper::wrap('select2'),
+            'value' => $value
         ];
 
         return $table_item;
