@@ -31,7 +31,7 @@ sample;
         return <<<sample
                 ->setShowBtn(false);
                 
-            return \$builder->build(true);
+            return \$builder;
 sample;
 
     }
@@ -53,7 +53,7 @@ sample;
                 ->setTitle('编辑{DummyModelTitle}')
                 ->setBackdrop(false)
                 ->setKeyboard(false)
-                ->setBody(\$this->edit(\$id));
+                ->bindFormBuilder(\$this->edit(\$id));
     }
 fun;
     }
@@ -67,7 +67,7 @@ fun;
                 ->setTitle('新增{DummyModelTitle}')
                 ->setBackdrop(false)
                 ->setKeyboard(false)
-                ->setBody(\$this->add());
+                ->bindFormBuilder(\$this->add());
     }
 fun;
     }

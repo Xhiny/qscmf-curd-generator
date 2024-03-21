@@ -11,8 +11,9 @@
         }
     ],
     "require": {
-        "php": ">=7.2",
-        "tiderjian/think-core": ">=11.30"
+        "php": ">=8.2",
+        "tiderjian/think-core": ">=13",
+        "quansitech/qscmf-buttontype-modal": ">=3"
     },
     "autoload": {
         "psr-4": {
